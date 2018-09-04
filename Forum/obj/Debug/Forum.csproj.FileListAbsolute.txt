@@ -1,0 +1,12 @@
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\Forum.pdb
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HTTP Server.dll
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HTTP Server.pdb
+C:\ftpshare\coding projects\Forum\Forum\Forum\obj\Debug\Forum.csprojResolveAssemblyReference.cache
+C:\ftpshare\coding projects\Forum\Forum\Forum\obj\Debug\Forum.csproj.CoreCompileInputs.cache
+C:\ftpshare\coding projects\Forum\Forum\Forum\obj\Debug\Forum.csproj.CopyComplete
+C:\ftpshare\coding projects\Forum\Forum\Forum\obj\Debug\Forum.pdb
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\Forum.exe
+C:\ftpshare\coding projects\Forum\Forum\Forum\obj\Debug\Forum.exe
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HtmlAgilityPack.dll
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HtmlAgilityPack.pdb
+C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HtmlAgilityPack.xml
