@@ -10,8 +10,9 @@ namespace Forum
     public class Forum
     {
         public ThreadManager threadManager;
-        public UserManager userManager;        
+        public UserManager userManager;
+        public FileManager fileManager;
 
-        public Forum() { threadManager = new ThreadManager(); userManager = new UserManager(); }
+        public Forum() { threadManager = new ThreadManager(); userManager = new UserManager(); fileManager = new FileManager(); }
     }
 }

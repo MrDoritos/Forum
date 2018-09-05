@@ -41,5 +41,24 @@ namespace Forum
         {
             Users.Add(new User.User(username, password));
         }        
+
+        public User.User TryAuth(string token)
+        {
+            if (token.Length > 0)
+            {
+                if (TokenExists(token))
+                {
+                    return Authenticate(token);
+                }
+                else
+                {
+                    return new User.User("anonymous", "password");
+                }
+            }
+            else
+            {
+                return new User.User("anonymous", "password");
+            }
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Forum
     class Program
     {
         static ForumServer forumServer;
-
+        
         public static void Main(string[] args)
         {
             forumServer = new ForumServer();

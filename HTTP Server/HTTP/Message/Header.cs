@@ -15,6 +15,7 @@ namespace HTTP_Server.HTTP.Message
         public string ContentType { get; private set; } = "text/html";
         public string CharSet { get; private set; } = "utf-8";
         public long ContentLength;
+        public string location = "/";
         public bool IsRequest = false;
         public string[] RequestHeaders;
         public ContentTypes SetContentType
@@ -72,6 +73,7 @@ namespace HTTP_Server.HTTP.Message
             NOT_FOUND = 404,
             FORBIDDEN = 403,
             I_AM_A_TEAPOT = 418,
+            REDIRECT = 301,
         }
 
         public enum ContentTypes

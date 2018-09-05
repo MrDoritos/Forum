@@ -25,6 +25,14 @@ namespace HTTP_Server
         {
             Bind = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 8080); Socket = new TcpListener(Bind);
         }
+        public Server(IPEndPoint bind)
+        {
+            if (bind == null)
+                Bind = new IPEndPoint(new IPAddress(new byte[] { 127, 0, 0, 1 }), 8080); 
+            else
+                Bind = bind;
+            Socket = new TcpListener(Bind);
+        }
 
         private async Task Listener()
         {
