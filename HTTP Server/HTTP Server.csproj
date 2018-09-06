@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HTTP\HttpResponse.cs" />
+    <Compile Include="HTTP\Message\Form.cs" />
+    <Compile Include="HTTP\Message\Forms\FormVariable.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="HTTP\Message\Content.cs" />
     <Compile Include="HTTP\Message\Header.cs" />

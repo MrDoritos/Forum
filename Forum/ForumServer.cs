@@ -98,7 +98,7 @@ namespace Forum
         public ForumServer()
         {
             forum = new Forum();
-            database = new Database("database.json");
+            database = new Database("database.json", forum);
             server = new HTTP_Server.Server(new System.Net.IPEndPoint(System.Net.Dns.GetHostAddresses(database.hostname)[0], database.port));
             
             server.RequestRecieved += RequestRecieved;
@@ -158,6 +158,7 @@ namespace Forum
                     var usr = forum.userManager.TryAuth(req.usertoken);
                     if (req.title.Length > 0 && req.content.Length > 0)
                     forum.threadManager.CreateThread(usr, new Thread.Header { content = req.content, title = req.title, tags = new string[] { "" } });
+                    database.SaveConfig();
                     SendRedirect(client, "/");
                 } else                
                 if (ModifyRequest.ContainsToken(request))
@@ -180,6 +181,11 @@ namespace Forum
                 {
                     if (request.Header.Method == HTTP_Server.HTTP.Message.Header.Methods.GET)
                     {
+                        if (ModifyRequest.ContainsToken(request))
+                        {
+                            var usr = forum.userManager.TryAuth(ModifyRequest.GetToken(request));
+                            usr.Read(thread.id);
+                        }
                         SendThreadPage(thread, client);
                     }
                     else
@@ -206,6 +212,7 @@ namespace Forum
                             {
                                 forum.threadManager.AppendThread(thread, new Thread.Message.Message(new User.User("anonymous", "password"), req.content));
                             }
+                            database.SaveConfig();
                         }
                         SendRedirect(client, request.Header.RequestURI);
                     }
@@ -236,6 +243,7 @@ namespace Forum
                 },
                 Header = new HTTP_Server.HTTP.Message.Header()
             };
+            Console.WriteLine($"{(int)httpResponse.Header.StatusCode} {httpResponse.Header.StatusCode}");
             client.Client.Send(httpResponse.Serialize());
         }
         
@@ -250,6 +258,7 @@ namespace Forum
                     StatusCode = HTTP_Server.HTTP.Message.Header.StatusCodes.REDIRECT,
                 }
             };
+            Console.WriteLine($"{(int)httpResponse.Header.StatusCode} {httpResponse.Header.StatusCode}");
             client.Client.Send(httpResponse.Serialize());
         }
 
@@ -261,7 +270,27 @@ namespace Forum
             {
                 var messagebox = doc.DocumentNode.DescendantsAndSelf().First(n => n.Attributes.Any(m => m.Name == "class" && m.Value == "threadhead"));
                 HtmlNode form = doc.CreateElement("div");
-                form.Attributes.Add("style", "border: 5px dashed blue");
+                form.Attributes.Add("style", "border: 5px dashed blue; padding: 5px;");
+
+                HtmlNode dateandauthor = doc.CreateElement("div");
+                dateandauthor.Attributes.Add("style", "display: block;");
+
+                HtmlNode author = doc.CreateElement("div");
+                author.Attributes.Add("style", "display: inline-block; width: 50%;");
+                var smg = doc.CreateElement("strong");
+                smg.AppendChild(HtmlTextNode.CreateNode($"{thread.author.username}"));
+                author.AppendChild(smg);
+                dateandauthor.AppendChild(author);
+
+                HtmlNode ddddd = doc.CreateElement("div");
+                ddddd.Attributes.Add("style", "display: inline-block; width: 50%;");
+                HtmlNode date = doc.CreateElement("p");
+                date.AppendChild(HtmlTextNode.CreateNode($"{thread.creationTime.ToString("MM/dd/yy HH:mm")}"));
+                date.Attributes.Add("style", "text-align: right; margin: 0;");
+                ddddd.AppendChild(date);
+                dateandauthor.AppendChild(ddddd);
+
+                form.AppendChild(dateandauthor);
 
                 HtmlNode title = doc.CreateElement("h2");
                 title.AppendChild(HtmlTextNode.CreateNode(thread.header.title));
@@ -335,12 +364,27 @@ namespace Forum
             foreach (var message in thread.messages)
             {
                 HtmlNode div = doc.CreateElement("div");
-                div.Attributes.Add("style", "border: 5px solid black; margin: 5px;");
+                div.Attributes.Add("style", "border: 1px solid black; margin: 5px; padding: 5px;");
                 HtmlNode content = doc.CreateElement("p");
-                HtmlNode author = doc.CreateElement("p");
+
+                HtmlNode dateandauthor = doc.CreateElement("div");
+                dateandauthor.Attributes.Add("style", "display: block;");
+                HtmlNode authordiv = doc.CreateElement("div");
+                HtmlNode datediv = doc.CreateElement("div");
+                authordiv.Attributes.Add("style", "display: inline-block; width: 50%;");
+                datediv.Attributes.Add("style", "display: inline-block; width: 50%;");
+                HtmlNode author = doc.CreateElement("strong");
+                HtmlNode date = doc.CreateElement("p");
+                date.Attributes.Add("style", "text-align: right; margin: 0;");
+                date.AppendChild(HtmlTextNode.CreateNode($"{message.creationTime.ToString("MM/dd/yy HH:mm")}"));
                 author.AppendChild(HtmlTextNode.CreateNode(message.author.username));
+                authordiv.AppendChild(author);
+                datediv.AppendChild(date);
+                dateandauthor.AppendChild(authordiv);
+                dateandauthor.AppendChild(datediv);
+                div.AppendChild(dateandauthor);
                 content.AppendChild(HtmlTextNode.CreateNode(message.contents));
-                div.AppendChild(author);
+                //div.AppendChild(author);
                 div.AppendChild(content);
                 messagetable.AppendChild(div);
             }           
@@ -356,6 +400,7 @@ namespace Forum
                 },
                 Header = new HTTP_Server.HTTP.Message.Header()
             };
+            Console.WriteLine($"{(int)httpResponse.Header.StatusCode} {httpResponse.Header.StatusCode}");
             client.Client.Send(httpResponse.Serialize());
         }
 
@@ -366,7 +411,7 @@ namespace Forum
             doc.LoadHtml(System.IO.File.ReadAllText("mainpage.html"));
             if (doc.DocumentNode.DescendantsAndSelf().Any(n => n.HasAttributes && n.Attributes.Any(m => m.Name == "class" && m.Value == "threadtable")))
             {
-                GetThreadsHTML(doc);
+                GetThreadsHTML(doc, curUser);
             }
             else
             {
@@ -435,21 +480,39 @@ namespace Forum
             return doc.Encoding.GetString(memoryStream.ToArray());
         }
 
-        private void GetThreadsHTML(HtmlDocument doc)
+        private void GetThreadsHTML(HtmlDocument doc, User.User curuser)
         {
             var threadtable = doc.DocumentNode.DescendantsAndSelf().First(n => n.HasAttributes && n.Attributes.Any(m => m.Name == "class" && m.Value == "threadtable"));
             foreach (var thread in forum.threadManager.Threads.OrderBy(n => n.id).AsEnumerable().Reverse())
             {
                 HtmlNode htmlNode = doc.CreateElement("div");
-                htmlNode.Attributes.Add("style", "border: 5px solid black; margin: 5px;");
-                HtmlNode title = doc.CreateElement("a");
-                
+                if (thread.messages.Count > 0 && curuser.HaveRead(thread.id, thread.creationTime) && !(curuser.username == "anonymous"))
+                {
+                    htmlNode.Attributes.Add("style", $"border: 5px {curuser.GetRead(thread.id, new DateTime(thread.messages?.Max(n => n.creationTime.Ticks) ?? 0))}; margin: 5px; padding: 5px;");
+                }
+                else if (curuser.username == "anonymous")
+                {
+                    htmlNode.Attributes.Add("style", $"border: 5px solid black; margin: 5px; padding: 5px");
+                }
+                else if (curuser.HaveRead(thread.id, thread.creationTime))
+                {
+                    htmlNode.Attributes.Add("style", $"border: 5px solid black; margin: 5px; padding: 5px");
+                }
+                    else
+                {
+                    htmlNode.Attributes.Add("style", $"border: 5px dashed green; margin: 5px; padding: 5px;");
+                }
+                HtmlNode title = doc.CreateElement("a");                
                 HtmlNode author = doc.CreateElement("p");
+                HtmlNode comments = doc.CreateElement("p");
+
                 title.Attributes.Add("href", $"/thread&{thread.id}");
                 title.AppendChild(HtmlTextNode.CreateNode(thread.header.title));
                 author.AppendChild(HtmlTextNode.CreateNode("Author: " + thread.author.username));
+                comments.AppendChild(HtmlTextNode.CreateNode($"{thread.messages.Count} Comments"));
                 htmlNode.AppendChild(title);
                 htmlNode.AppendChild(author);
+                htmlNode.AppendChild(comments);
                 threadtable.AppendChild(htmlNode);
             }
         }
@@ -464,6 +527,7 @@ namespace Forum
                     StatusCode = HTTP_Server.HTTP.Message.Header.StatusCodes.NOT_FOUND
                 }
             };
+            Console.WriteLine($"{(int)httpResponse.Header.StatusCode} {httpResponse.Header.StatusCode}");
             client.Client.Send(httpResponse.Serialize());
             await Task.Delay(1);
         }
@@ -477,6 +541,7 @@ namespace Forum
                     Content = new HTTP_Server.HTTP.Message.Content() { Buffer = Encoding.UTF8.GetBytes(loginHTMLwrongpass) },
                     Header = new HTTP_Server.HTTP.Message.Header(),
                 };
+                Console.WriteLine($"{(int)httpResponse.Header.StatusCode} {httpResponse.Header.StatusCode}");
                 client.Client.Send(httpResponse.Serialize());
                 await Task.Delay(1);
             }
@@ -487,6 +552,7 @@ namespace Forum
                     Content = new HTTP_Server.HTTP.Message.Content() { Buffer = Encoding.UTF8.GetBytes(loginHTML) },
                     Header = new HTTP_Server.HTTP.Message.Header(),
                 };
+                Console.WriteLine($"{(int)httpResponse.Header.StatusCode} {httpResponse.Header.StatusCode}");
                 client.Client.Send(httpResponse.Serialize());
                 await Task.Delay(1);
             }

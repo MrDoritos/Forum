@@ -41,7 +41,7 @@ namespace HTTP_Server
                 try
                 {
                     var client = await Socket.AcceptTcpClientAsync();
-                    await Task.Run(() => ClientHandler(client));
+                    Task.Run(() => ClientHandler(client));
                 }
                 catch (Exception)
                 {

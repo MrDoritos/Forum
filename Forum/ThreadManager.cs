@@ -22,6 +22,11 @@ namespace Forum
             Threads.Add(thread);
         }
 
+        public void AddMany(IEnumerable<Thread.Thread> threads)
+        {
+            Threads.AddRange(threads);
+        }
+
         public bool ThreadExists(int id)
         {
             return (Threads.Any(n => n.id == id));

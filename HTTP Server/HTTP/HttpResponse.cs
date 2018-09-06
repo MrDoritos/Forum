@@ -21,6 +21,7 @@ namespace HTTP_Server.HTTP
         {
             if (Header.IsRequest) { return new byte[0]; }
             string header = $"{Header.HttpVersion} {(int)Header.StatusCode} {Header.StatusCode.ToString()}\r\n";
+            header += "cache-control: no-store\r\n";
             if (Header.StatusCode == Header.StatusCodes.REDIRECT)
             {
                 header += $"location: {Header.location}\r\n\r\n"; 

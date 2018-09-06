@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HTTP_Server.HTTP.Message
 {
     public class Header
-    {
+    {        
         public string HttpVersion = "HTTP/2.0";
         public string RequestURI = "";
         public StatusCodes StatusCode = StatusCodes.OK;
@@ -83,6 +83,7 @@ namespace HTTP_Server.HTTP.Message
             XML,
             JAVASCRIPT,
             IMG,
+            FORM,
         }
         public enum Charset
         {
