@@ -14,6 +14,7 @@ namespace Forum
         {
             forumServer = new ForumServer();
             forumServer.StartForumServer();
+            Console.WriteLine("Started server");
             Task.Delay(-1).GetAwaiter().GetResult();
         }
     }

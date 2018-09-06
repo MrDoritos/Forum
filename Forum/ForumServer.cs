@@ -212,9 +212,9 @@ namespace Forum
                             {
                                 forum.threadManager.AppendThread(thread, new Thread.Message.Message(new User.User("anonymous", "password"), req.content));
                             }
-                            database.SaveConfig();
                         }
                         SendRedirect(client, request.Header.RequestURI);
+                        database.SaveConfig();
                     }
                 }
                 else

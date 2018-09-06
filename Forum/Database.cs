@@ -79,12 +79,19 @@ namespace Forum
             List<Thread.Thread> threadsList = new List<Thread.Thread>();
             foreach (var value in threads)
             {
-                Thread.Thread thread = new Thread.Thread();
-                thread.id = (int)value["id"];
-                thread.messages = GetMessages((JArray)value["comments"]).ToList();
-                thread.author = GetUser(value["author"].Children<JObject>().First());
-                thread.header = GetHeader(value["header"].Children<JObject>().First());
-                threadsList.Add(thread);
+                try
+                {
+                    Thread.Thread thread = new Thread.Thread();
+                    thread.id = (int)value["id"];
+                    thread.messages = GetMessages(value["comments"].Value<JArray>()).ToList();
+                    thread.author = GetUser(value["author"].Value<JObject>());
+                    thread.header = GetHeader(value["header"].Value<JObject>());
+                    threadsList.Add(thread);
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Could not retrieve thread from database");
+                }
             }
             return threadsList;
         }
@@ -100,10 +107,12 @@ namespace Forum
 
         public IEnumerable<Thread.Message.Message> GetMessages(JArray messages)
         {
+            if (messages == null) { return new List<Thread.Message.Message>(); }
             List<Thread.Message.Message> messagesList = new List<Thread.Message.Message>();
             foreach (var value in messages)
             {
-                Thread.Message.Message message = new Thread.Message.Message(GetUser(value["author"].Children<JObject>().First()), (string)value["content"]);
+                Thread.Message.Message message = new Thread.Message.Message(GetUser(value["author"].Value<JObject>()), (string)value["content"]);
+                messagesList.Add(message);
             }
             return messagesList;
         }
@@ -148,18 +157,21 @@ namespace Forum
                     author.Add("password", comment.author.password);
                     author.Add("token", comment.author.token);
                     message.Add("author", author);
-                    comments.Add(message);
+                    comments.Add(message);                    
                 }
+                tt.Add("comments", comments);
                 JObject tauthor = new JObject();
                 tauthor.Add("username", thread.author.username);
                 tauthor.Add("password", thread.author.password);
                 tauthor.Add("token", thread.author.token);
                 tt.Add("author", tauthor);
 
+
                 JObject header = new JObject();
                 header.Add("title", thread.header.title);
                 header.Add("content", thread.header.content);
                 tt.Add("header", header);
+                threads.Add(tt);
             }
             json.Add("threads", threads);
             try
