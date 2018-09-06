@@ -1,0 +1,6 @@
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Release\HTTP Server.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Release\HTTP Server.pdb
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Release\HTTP Server.csprojResolveAssemblyReference.cache
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Release\HTTP Server.csproj.CoreCompileInputs.cache
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Release\HTTP Server.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Release\HTTP Server.pdb

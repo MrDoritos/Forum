@@ -64,7 +64,7 @@ namespace Forum.Server
 
         static public string GetToken(HTTP_Server.HTTP.HttpRequest httpRequest)
         {
-            return HttpUtility.UrlDecode(httpRequest.Header.RequestHeaders.FirstOrDefault(n => n.ToLower().StartsWith("cookie")).Remove(0, 14).Trim('\r', '\n', '\0'));
+            return httpRequest.Header.RequestHeaders.FirstOrDefault(n => n.ToLower().StartsWith("cookie")).Remove(0, 14).Trim('\r', '\n', '\0');
         }
 
         static public bool ContainsToken(HTTP_Server.HTTP.HttpRequest httpRequest)

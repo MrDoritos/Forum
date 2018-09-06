@@ -1,0 +1,14 @@
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\Forum.exe
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\Forum.pdb
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\HtmlAgilityPack.dll
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\HTTP Server.dll
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\Newtonsoft.Json.dll
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\HTTP Server.pdb
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\HtmlAgilityPack.pdb
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\HtmlAgilityPack.xml
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Release\Newtonsoft.Json.xml
+C:\FTPShare\coding projects\Forum\Forum\Forum\obj\Release\Forum.csprojResolveAssemblyReference.cache
+C:\FTPShare\coding projects\Forum\Forum\Forum\obj\Release\Forum.csproj.CoreCompileInputs.cache
+C:\FTPShare\coding projects\Forum\Forum\Forum\obj\Release\Forum.csproj.CopyComplete
+C:\FTPShare\coding projects\Forum\Forum\Forum\obj\Release\Forum.exe
+C:\FTPShare\coding projects\Forum\Forum\Forum\obj\Release\Forum.pdb
