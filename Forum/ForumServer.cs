@@ -206,11 +206,11 @@ namespace Forum
                                 }
                             if (forum.userManager.TokenExists(req.usertoken))
                             {
-                                forum.threadManager.AppendThread(thread, new Thread.Message.Message(forum.userManager.Authenticate(req.usertoken), req.content));
+                                forum.threadManager.AppendThread(thread, new Thread.Message.Message(forum.userManager.Authenticate(req.usertoken), System.Web.HttpUtility.HtmlEncode(req.content)));
                             }
                             else
                             {
-                                forum.threadManager.AppendThread(thread, new Thread.Message.Message(new User.User("anonymous", "password"), req.content));
+                                forum.threadManager.AppendThread(thread, new Thread.Message.Message(new User.User("anonymous", "password"), System.Web.HttpUtility.HtmlEncode(req.content)));
                             }
                         }
                         SendRedirect(client, request.Header.RequestURI);
@@ -273,7 +273,7 @@ namespace Forum
                 form.Attributes.Add("style", "border: 5px dashed blue; padding: 5px;");
 
                 HtmlNode dateandauthor = doc.CreateElement("div");
-                dateandauthor.Attributes.Add("style", "display: block;");
+                dateandauthor.Attributes.Add("style", "display: block; font-size: 30px;");
 
                 HtmlNode author = doc.CreateElement("div");
                 author.Attributes.Add("style", "display: inline-block; width: 50%;");
@@ -292,12 +292,32 @@ namespace Forum
 
                 form.AppendChild(dateandauthor);
 
-                HtmlNode title = doc.CreateElement("h2");
-                title.AppendChild(HtmlTextNode.CreateNode(thread.header.title));
+                HtmlNode title = doc.CreateElement("p");
+                title.Attributes.Add("style", "font-size: 40px; margin: 1%;");
+                title.AppendChild(HtmlTextNode.CreateNode(thread.header.title.Replace("\r", "").Replace("\n", "<br>")) ?? HtmlTextNode.CreateNode("bad"));
                 form.AppendChild(title);
 
-                HtmlNode content = doc.CreateElement("p");
-                content.AppendChild(HtmlTextNode.CreateNode(thread.header.content));
+                HtmlNode content = doc.CreateElement("div");
+                content.Attributes.Add("style", "padding-left: 10px; padding-right: 5%; font-size: 20px;");
+                //content.AppendChild(HtmlTextNode.CreateNode(thread.header.content.Replace("\r", "").Replace("\n", "<br>")) ?? HtmlTextNode.CreateNode("bad"));
+                
+
+
+                foreach (var a in thread.header.content.Replace("\r", "").Split('\n'))
+                {
+                    HtmlNode p;
+                    if (a.Length > 0)
+                    {
+                        p = doc.CreateElement("p");
+                        p.Attributes.Add("style", "margin: 0");
+                        p.AppendChild(HtmlTextNode.CreateNode(a) ?? HtmlTextNode.CreateNode("bad"));
+                    }
+                    else
+                    {
+                        p = doc.CreateElement("p");                       
+                    }
+                    content.AppendChild(p);
+                }
                 form.AppendChild(content);
 
                 messagebox.AppendChild(form);
@@ -365,10 +385,11 @@ namespace Forum
             {
                 HtmlNode div = doc.CreateElement("div");
                 div.Attributes.Add("style", "border: 1px solid black; margin: 5px; padding: 5px;");
-                HtmlNode content = doc.CreateElement("p");
+                HtmlNode content = doc.CreateElement("div");
+                content.Attributes.Add("style", "padding-right: 5%; padding-left: 10px; font-size: 20px");
 
                 HtmlNode dateandauthor = doc.CreateElement("div");
-                dateandauthor.Attributes.Add("style", "display: block;");
+                dateandauthor.Attributes.Add("style", "display: block; font-size: 30px;");
                 HtmlNode authordiv = doc.CreateElement("div");
                 HtmlNode datediv = doc.CreateElement("div");
                 authordiv.Attributes.Add("style", "display: inline-block; width: 50%;");
@@ -377,13 +398,31 @@ namespace Forum
                 HtmlNode date = doc.CreateElement("p");
                 date.Attributes.Add("style", "text-align: right; margin: 0;");
                 date.AppendChild(HtmlTextNode.CreateNode($"{message.creationTime.ToString("MM/dd/yy HH:mm")}"));
-                author.AppendChild(HtmlTextNode.CreateNode(message.author.username));
+                author.AppendChild(HtmlTextNode.CreateNode(message.author.username) ?? HtmlTextNode.CreateNode("bad"));
                 authordiv.AppendChild(author);
                 datediv.AppendChild(date);
                 dateandauthor.AppendChild(authordiv);
                 dateandauthor.AppendChild(datediv);
                 div.AppendChild(dateandauthor);
-                content.AppendChild(HtmlTextNode.CreateNode(message.contents));
+                foreach (var a in message.contents.Replace("\r", "").Split('\n'))
+                {
+                    //var p = doc.CreateElement("p");
+                    //p.Attributes.Add("style", "margin: 0");
+                    //p.AppendChild(HtmlTextNode.CreateNode(a) ?? HtmlTextNode.CreateNode("bad"));
+                    //content.AppendChild(p);
+                    HtmlNode p;
+                    if (a.Length > 0)
+                    {
+                        p = doc.CreateElement("p");
+                        p.Attributes.Add("style", "margin: 0");
+                        p.AppendChild(HtmlTextNode.CreateNode(a));
+                    }
+                    else
+                    {
+                        p = doc.CreateElement("p");
+                    }
+                    content.AppendChild(p);
+                }
                 //div.AppendChild(author);
                 div.AppendChild(content);
                 messagetable.AppendChild(div);
@@ -469,8 +508,7 @@ namespace Forum
             {
                 var messagebox = doc.DocumentNode.DescendantsAndSelf().First(n => n.Attributes.Any(m => m.Name == "class" && m.Value == "loggedin"));
                 messagebox.RemoveAllChildren();
-                
-                messagebox.AppendChild(HtmlTextNode.CreateNode(curUser.username));
+                messagebox.AppendChild(HtmlTextNode.CreateNode(curUser.username) ?? HtmlTextNode.CreateNode("bad"));                
             }
             else
             {
@@ -507,7 +545,7 @@ namespace Forum
                 HtmlNode comments = doc.CreateElement("p");
 
                 title.Attributes.Add("href", $"/thread&{thread.id}");
-                title.AppendChild(HtmlTextNode.CreateNode(thread.header.title));
+                title.AppendChild(HtmlTextNode.CreateNode(thread.header.title) ?? HtmlTextNode.CreateNode("bad"));
                 author.AppendChild(HtmlTextNode.CreateNode("Author: " + thread.author.username));
                 comments.AppendChild(HtmlTextNode.CreateNode($"{thread.messages.Count} Comments"));
                 htmlNode.AppendChild(title);
