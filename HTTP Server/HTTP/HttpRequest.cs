@@ -11,12 +11,13 @@ namespace HTTP_Server.HTTP
     {
         private static string[] split = new string[] { "\r\n\r\n" };
         private static string[] splitHeader = new string[] { "\r\n" };
+        private byte[] _request;
 
         public Header Header { get; private set; }
         public Content Content { get; private set; }
         public Form Form { get; private set; }
-        public HttpRequest(Header Header, Content Content, Form Form) { this.Header = Header; this.Content = Content; this.Form = Form; }
-        public HttpRequest(Header Header, Content Content) { this.Header = Header; this.Content = Content; }
+        public HttpRequest(Header Header, Content Content, Form Form, byte[] raw) { this.Header = Header; this.Content = Content; this.Form = Form; _request = raw; }
+        public HttpRequest(Header Header, Content Content, byte[] raw) { this.Header = Header; this.Content = Content; _request = raw; }
 
         public static HttpRequest Parse(byte[] buffer)
         {
@@ -34,8 +35,15 @@ namespace HTTP_Server.HTTP
             headerTemplate.RequestHeaders = splitHead;
             headerTemplate.IsRequest = true;
 
-            if (method == Header.Methods.POST) { form = Form.TryParse(Encoding.UTF8.GetString(content)); return new HttpRequest(headerTemplate, contentTemplate, form); } else
-            return new HttpRequest(headerTemplate, contentTemplate);
+            if (method == Header.Methods.POST) { form = Form.TryParse(new HttpRequest(headerTemplate, contentTemplate, buffer), Form.FormType.MULTIPARTFORMDATA); return new HttpRequest(headerTemplate, contentTemplate, form, buffer); } else
+            return new HttpRequest(headerTemplate, contentTemplate, buffer);
         }
+
+        public override string ToString()
+        {
+            return Encoding.UTF8.GetString(_request);
+        }
+
+        public byte[] GetBytes() { return _request; }
     }
 }

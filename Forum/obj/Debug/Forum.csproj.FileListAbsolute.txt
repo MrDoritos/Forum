@@ -12,3 +12,6 @@ C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HtmlAgilityPack.pdb
 C:\ftpshare\coding projects\Forum\Forum\Forum\bin\Debug\HtmlAgilityPack.xml
 C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Debug\Newtonsoft.Json.dll
 C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Debug\Newtonsoft.Json.xml
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Debug\Forum.exe.config
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Debug\HttpMultipartParser.dll
+C:\FTPShare\coding projects\Forum\Forum\Forum\bin\Debug\HttpMultipartParser.xml

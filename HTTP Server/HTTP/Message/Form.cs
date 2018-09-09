@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
+using HttpMultipartParser;
 
 namespace HTTP_Server.HTTP.Message
 {
@@ -18,15 +19,16 @@ namespace HTTP_Server.HTTP.Message
 
         public IEnumerable<Forms.FormVariable<string>> formVariables;
 
-        public static Form TryParse(string content, FormType formType = FormType.URLENCODEDFORM)
+        public static Form TryParse(HttpRequest httpRequest, FormType formType = FormType.URLENCODEDFORM)
         {
             Form form = new Form();
             switch (formType)
             {
                 case FormType.URLENCODEDFORM:
-                    form = GetURLEncodedFormData(content);
+                    form = GetURLEncodedFormData(Encoding.UTF8.GetString(httpRequest.Content.Buffer));
                     break;
                 case FormType.MULTIPARTFORMDATA:
+                    form = GetMultiPartFormData(httpRequest);
                     break;
             }
             return form;
@@ -50,6 +52,16 @@ namespace HTTP_Server.HTTP.Message
             return form;
         }
 
-        private static void GetMultiPartFormData() { }
+        private static Form GetMultiPartFormData(HttpRequest httpRequest)
+        {
+            string boundary;
+            var s = httpRequest.Header.RequestHeaders.FirstOrDefault(n => n.ToLower().StartsWith("content-type"));
+            var b = s.Split(';');
+            if (b.Length > 0)
+            {
+                boundary = b[1].Split('=').Last();
+            }
+            return null;
+        }
     }
 }

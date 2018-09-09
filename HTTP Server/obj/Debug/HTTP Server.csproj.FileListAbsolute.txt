@@ -4,3 +4,18 @@ C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Debug\HTTP Server.csproj
 C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Debug\HTTP Server.csproj.CoreCompileInputs.cache
 C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Debug\HTTP Server.dll
 C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Debug\HTTP Server.pdb
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\InMemoryMultipartFormDataStreamProvider.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\Newtonsoft.Json.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\nunit.framework.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\Sprache.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\System.Net.Http.Formatting.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\System.Web.Http.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\Newtonsoft.Json.xml
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\nunit.framework.xml
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\Sprache.pdb
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\Sprache.xml
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\System.Net.Http.Formatting.xml
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\System.Web.Http.xml
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\obj\Debug\HTTP Server.csproj.CopyComplete
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\HttpMultipartParser.dll
+C:\FTPShare\coding projects\Forum\Forum\HTTP Server\bin\Debug\HttpMultipartParser.xml
